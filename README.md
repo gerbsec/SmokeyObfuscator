@@ -14,11 +14,11 @@ SmokeyObfuscator is a powerful tool designed to obfuscate .NET C# assemblies, pr
 
 ### Before Obfuscation
 
-![Before Obfuscation](Before.png)
+![Before Obfuscation](Before.PNG)
 
 ### After Obfuscation
 
-![After Obfuscation](After.png)
+![After Obfuscation](After.PNG)
 
 ## Getting Started
 
