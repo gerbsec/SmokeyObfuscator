@@ -81,8 +81,15 @@ namespace SmokeyObfuscator
         private void button1_Click(object sender, EventArgs e)
         {
             ModuleDefMD module = ModuleDefMD.Load(rawFileLocation);
-            Constants.Process(module);
+            AntiDe4Dot.Execute(module.Assembly);
+            Strings.Execute(module);
             NumberChanger.Process(module);
+            ProxyStrings.Execute(module);
+            ProxyInts.Execute(module);
+            Calli.Execute(module);
+            Constants.Process(module);
+            ConstantsMelting.Execute(module);
+            Renamer.Execute(module);
             SaveFile(module, rawFileLocation);
         }
 
@@ -94,9 +101,6 @@ namespace SmokeyObfuscator
             var opts = new ModuleWriterOptions(module);
             opts.Logger = DummyLogger.NoThrowInstance;
             module.Write(savePath, opts);
-            button1.Text = "Your File has been Obfuscated & Saved!";
-            Thread.Sleep(3000);
-            Environment.Exit(0);
         }
     }
 }

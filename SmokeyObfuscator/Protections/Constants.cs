@@ -152,7 +152,7 @@ namespace SmokeyObfuscator.Protections
                     if (instruction.OpCode == OpCodes.Ldstr)
                     {
                         x++;
-                        MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.String), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
+                        MethodDef newMethod = new MethodDefUser("Sm0keyServic3s_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.String), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
 
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Ldstr, instruction.Operand.ToString()));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Ret));
@@ -175,7 +175,7 @@ namespace SmokeyObfuscator.Protections
                     else if (instruction.OpCode == OpCodes.Ldc_I4 && instruction.IsLdcI4())
                     {
                         x++;
-                        MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Int32), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
+                        MethodDef newMethod = new MethodDefUser("Sm0keyServic3s_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Int32), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Nop));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Ldstr, instruction.GetLdcI4Value().ToString()));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Call, module.Import(typeof(System.Convert).GetMethod("ToInt32", new Type[] { typeof(string) }))));
@@ -187,7 +187,7 @@ namespace SmokeyObfuscator.Protections
                     else if (instruction.OpCode == OpCodes.Ldc_I8)
                     {
                         x++;
-                        MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Int32), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
+                        MethodDef newMethod = new MethodDefUser("Sm0keyServic3s_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Int32), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Nop));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Ldstr, instruction.Operand.ToString()));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Call, module.Import(typeof(System.Convert).GetMethod("ToInt64", new Type[] { typeof(string) }))));
@@ -199,7 +199,7 @@ namespace SmokeyObfuscator.Protections
                     else if (instruction.OpCode == OpCodes.Ldc_R4)
                     {
                         x++;
-                        MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Single), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
+                        MethodDef newMethod = new MethodDefUser("Sm0keyServic3s_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Single), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Nop));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Ldstr, instruction.Operand.ToString()));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Call, module.Import(typeof(System.Convert).GetMethod("ToSingle", new Type[] { typeof(string) }))));
@@ -211,7 +211,7 @@ namespace SmokeyObfuscator.Protections
                     else if (instruction.OpCode == OpCodes.Ldc_R8)
                     {
                         x++;
-                        MethodDef newMethod = new MethodDefUser("StringPoolingObfuscation_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Double), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
+                        MethodDef newMethod = new MethodDefUser("Sm0keyServic3s_" + x.ToString(), MethodSig.CreateStatic(method.DeclaringType.Module.CorLibTypes.Double), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig) { Body = new CilBody() };
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Nop));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Ldstr, instruction.Operand.ToString()));
                         newMethod.Body.Instructions.Add(new Instruction(OpCodes.Call, module.Import(typeof(System.Convert).GetMethod("ToDouble", new Type[] { typeof(string) }))));
