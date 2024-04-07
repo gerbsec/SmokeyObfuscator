@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{18D8F3A0-872F-4AD0-97A2-FC2E03616C02}|SmokeyObfuscator.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18D8F3A0-872F-4AD0-97A2-FC2E03616C02}|SmokeyObfuscator.csproj|c:\\users\\trent\\onedrive\\desktop\\github\\smokeyobfuscator\\smokeyobfuscator\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{18D8F3A0-872F-4AD0-97A2-FC2E03616C02}|SmokeyObfuscator.csproj|C:\\Users\\trent\\OneDrive\\Desktop\\GitHub\\SmokeyObfuscator\\SmokeyObfuscator\\main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{18D8F3A0-872F-4AD0-97A2-FC2E03616C02}|SmokeyObfuscator.csproj|solutionrelative:main.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
@@ -28,7 +28,7 @@
               "RelativeDocumentMoniker": "Main.cs",
               "ToolTip": "C:\\Users\\trent\\OneDrive\\Desktop\\GitHub\\SmokeyObfuscator\\SmokeyObfuscator\\Main.cs",
               "RelativeToolTip": "Main.cs",
-              "ViewState": "AQIAADgAAAAAAAAAAAA3wFUAAAAmAAAA",
+              "ViewState": "AQIAADkAAAAAAAAAAAAYwFQAAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-06T04:09:02.315Z",
               "EditorCaption": ""
@@ -42,8 +42,7 @@
               "ToolTip": "C:\\Users\\trent\\OneDrive\\Desktop\\GitHub\\SmokeyObfuscator\\SmokeyObfuscator\\Main.cs [Design]",
               "RelativeToolTip": "Main.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-06T04:02:50.72Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2024-04-06T04:02:50.72Z"
             }
           ]
         }

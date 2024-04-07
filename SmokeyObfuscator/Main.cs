@@ -81,9 +81,8 @@ namespace SmokeyObfuscator
         private void button1_Click(object sender, EventArgs e)
         {
             ModuleDefMD module = ModuleDefMD.Load(rawFileLocation);
-            FakeCode.Execute(module);
-            NumberChanger.Process(module);
             Constants.Process(module);
+            NumberChanger.Process(module);
             SaveFile(module, rawFileLocation);
         }
 
