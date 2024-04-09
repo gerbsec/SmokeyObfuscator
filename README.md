@@ -19,6 +19,7 @@ SmokeyObfuscator is a powerful tool designed to obfuscate .NET C# assemblies, pr
 ### After Obfuscation
 
 ![After Obfuscation](After.PNG)
+![After Obfuscation](After2.PNG)
 
 ## Getting Started
 
