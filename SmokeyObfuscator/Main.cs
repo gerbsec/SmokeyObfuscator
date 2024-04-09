@@ -81,14 +81,13 @@ namespace SmokeyObfuscator
         private void button1_Click(object sender, EventArgs e)
         {
             ModuleDefMD module = ModuleDefMD.Load(rawFileLocation);
-            AntiDe4Dot.Execute(module.Assembly);
+            JunkCode.Execute(module);
             Strings.Execute(module);
+            Mutation.Execute(module);
             NumberChanger.Process(module);
-            ProxyStrings.Execute(module);
-            ProxyInts.Execute(module);
-            Calli.Execute(module);
             Constants.Process(module);
             ConstantsMelting.Execute(module);
+            ProxyInts.Execute(module);
             Renamer.Execute(module);
             SaveFile(module, rawFileLocation);
         }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmokeyObfuscator.Protections
 {
-    internal class Random
+    internal class Random2
     {
         private static System.Random random = new System.Random();
         private static System.Random length = new System.Random();

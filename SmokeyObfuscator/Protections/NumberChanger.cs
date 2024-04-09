@@ -48,7 +48,6 @@ namespace SmokeyObfuscator.Protections
             int num = _random.GetRandomInt32(100000);
             bool once = _random.GetRandomBoolean();
             int num1 = _random.GetRandomInt32(100000);
-
             instructions.Add(Instruction.Create(OpCodes.Ldc_I4, value - num + (once ? (0 - num1) : num1)));
             instructions.Add(Instruction.Create(OpCodes.Ldc_I4, num));
             instructions.Add(Instruction.Create(OpCodes.Add));
@@ -56,7 +55,6 @@ namespace SmokeyObfuscator.Protections
             instructions.Add(Instruction.Create(once ? OpCodes.Add : OpCodes.Sub));
             instructions.Add(Instruction.Create(OpCodes.Ldc_I4_0));
             instructions.Add(Instruction.Create(OpCodes.Add));
-
             return instructions;
         }
     }

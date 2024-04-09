@@ -13,8 +13,8 @@ namespace SmokeyObfuscator.Protections
         {
             foreach (TypeDef type in module.Types)
             {
-                type.Name = Random.GetRandomString();
-                type.Namespace = Random.GetRandomString();
+                type.Name = Random2.GetRandomString();
+                type.Namespace = Random2.GetRandomString();
                 if (type.IsGlobalModuleType || type.IsRuntimeSpecialName || type.IsSpecialName || type.IsWindowsRuntime || type.IsInterface)
                 {
                     continue;
@@ -22,23 +22,23 @@ namespace SmokeyObfuscator.Protections
                 foreach (MethodDef method in type.Methods)
                 {
                     if (method.IsConstructor || method.IsRuntimeSpecialName || method.IsRuntime || method.IsStaticConstructor || method.IsVirtual) continue;
-                    method.Name = Random.GetRandomString(); ;
+                    method.Name = Random2.GetRandomString(); ;
                     foreach (var field in type.Fields)
                     {
-                        field.Name = Random.GetRandomString(); ;
+                        field.Name = Random2.GetRandomString(); ;
                         foreach (EventDef eventdef in type.Events)
                         {
-                            eventdef.Name = Random.GetRandomString(); ;
+                            eventdef.Name = Random2.GetRandomString(); ;
                             foreach (PropertyDef property in type.Properties)
                             {
                                 if (property.IsRuntimeSpecialName) continue;
-                                property.Name = Random.GetRandomString(); ;
+                                property.Name = Random2.GetRandomString(); ;
                             }
                         }
                     }
                     foreach (ParamDef p in method.ParamDefs)
                     {
-                        p.Name = Random.GetRandomString(); ;
+                        p.Name = Random2.GetRandomString(); ;
                     }
                 }
             }

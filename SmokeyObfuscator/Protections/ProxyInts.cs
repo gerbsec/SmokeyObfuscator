@@ -25,7 +25,7 @@ namespace SmokeyObfuscator.Protections
                         {
                             var methImplFlags = MethodImplAttributes.IL | MethodImplAttributes.Managed;
                             var methFlags = MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.ReuseSlot;
-                            var meth1 = new MethodDefUser(Random.GetRandomString(),
+                            var meth1 = new MethodDefUser(Random2.GetRandomString(),
                                         MethodSig.CreateStatic(module.CorLibTypes.Int32),
                                         methImplFlags, methFlags);
                             module.GlobalType.Methods.Add(meth1);
@@ -40,7 +40,7 @@ namespace SmokeyObfuscator.Protections
                         {
                             var methImplFlags = MethodImplAttributes.IL | MethodImplAttributes.Managed;
                             var methFlags = MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.ReuseSlot;
-                            var meth1 = new MethodDefUser(Random.GetRandomString(),
+                            var meth1 = new MethodDefUser(Random2.GetRandomString(),
                                         MethodSig.CreateStatic(module.CorLibTypes.Double),
                                         methImplFlags, methFlags);
                             module.GlobalType.Methods.Add(meth1);
