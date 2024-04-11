@@ -73,11 +73,6 @@ namespace SmokeyObfuscator
             }
         }
 
-        private void Main_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             ModuleDefMD module = ModuleDefMD.Load(rawFileLocation);
@@ -85,8 +80,8 @@ namespace SmokeyObfuscator
             Strings.Execute(module);
             Constants.Process(module);
             ConstantsMelting.Execute(module);
-            Mutation.Execute(module);
             ProxyInts.Execute(module);
+            HideMethods.Execute(module);
             SaveFile(module, rawFileLocation);
         }
 
