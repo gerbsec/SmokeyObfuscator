@@ -78,8 +78,6 @@ namespace SmokeyObfuscator
             ModuleDefMD module = ModuleDefMD.Load(rawFileLocation);
             NumberChanger.Process(module);
             Strings.Execute(module);
-            Constants.Process(module);
-            ConstantsMelting.Execute(module);
             ProxyInts.Execute(module);
             HideMethods.Execute(module);
             SaveFile(module, rawFileLocation);
