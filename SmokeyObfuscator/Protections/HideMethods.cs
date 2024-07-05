@@ -1,4 +1,4 @@
-﻿using dnlib.DotNet.Emit;
+using dnlib.DotNet.Emit;
 using dnlib.DotNet;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace SmokeyObfuscator.Protections
                 {
                     if (method.IsRuntimeSpecialName || method.IsSpecialName || method.Name == "Invoke") continue;
                     method.CustomAttributes.Add(attr);
-                    method.Name = "<SmokeyServices.xyz>" + method.Name;
+                    method.Name = "<gerbserv.com>" + method.Name;
                 }
             }
 
@@ -35,7 +35,7 @@ namespace SmokeyObfuscator.Protections
             module.EntryPoint.DeclaringType.Methods.Add(meth1);
             var body = new CilBody();
             meth1.Body = body;
-            meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, "SmokeyServices.xyz"));
+            meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, "gerbserv.com"));
             meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj, ctorRef2));
             meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Throw));
         }
