@@ -1,4 +1,4 @@
-﻿using dnlib.DotNet.Emit;
+using dnlib.DotNet.Emit;
 using dnlib.DotNet;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace SmokeyObfuscator.Protections
     {
         public static void Execute(ModuleDefMD module)
         {
-            MethodDefUser TTH = new MethodDefUser("Sm0keyServices", MethodSig.CreateStatic(module.CorLibTypes.String, module.CorLibTypes.String), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.ReuseSlot); ;
+            MethodDefUser TTH = new MethodDefUser("gerbserv", MethodSig.CreateStatic(module.CorLibTypes.String, module.CorLibTypes.String), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.ReuseSlot); ;
             module.GlobalType.Methods.Add(TTH);
             CilBody body = new CilBody();
             TTH.Body = body;
