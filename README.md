@@ -10,7 +10,7 @@ SmokeyObfuscator is a powerful tool designed to obfuscate .NET C# assemblies, pr
 - **Easy to Use**: Simple and intuitive user interface, allowing effortless obfuscation of your assemblies.
 - **Customization Options**: Offers a range of customization options to tailor the obfuscation process to your specific needs.
 
-1. Download the latest release of SmokeyObfuscator from the [Releases](https://github.com/yourusername/SmokeyObfuscator/releases) page.
+1. Download the latest release of SmokeyObfuscator from the [Releases](https://github.com/gerbsec/SmokeyObfuscator/releases) page.
 2. Extract the downloaded ZIP file to a directory on your Windows machine.
 3. Run the `SmokeyObfuscator.exe` executable.
 4. Select the folder of binaries that you would like obfuscated
@@ -19,4 +19,4 @@ SmokeyObfuscator is a powerful tool designed to obfuscate .NET C# assemblies, pr
 
 ## Support
 
-For any issues or feature requests, please [open an issue](https://github.com/yourusername/SmokeyObfuscator/issues) on GitHub.
+For any issues or feature requests, please [open an issue](https://github.com/gerbsec/SmokeyObfuscator/issues) on GitHub.
