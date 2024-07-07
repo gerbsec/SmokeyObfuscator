@@ -1,7 +1,3 @@
-Here's a revised README for the `SmokeyObfuscator`, now updated to reflect its new command-line interface functionality:
-
----
-
 # SmokeyObfuscator - Universal .NET C# Obfuscator for Windows
 
 SmokeyObfuscator is a powerful tool designed to obfuscate .NET C# assemblies, enhancing security for your applications by making it difficult for reverse engineers to understand and tamper with your code.
@@ -58,7 +54,3 @@ SmokeyObfuscator.exe -f "C:\Path\To\Your\Project\bin\Release\MyApp.exe"
 ## Support
 
 For any issues, bugs, or feature requests, please [open an issue](https://github.com/gerbsec/SmokeyObfuscator/issues) on GitHub. Your feedback helps make SmokeyObfuscator better for everyone.
-
----
-
-This README provides all necessary details for both new and existing users, emphasizing the switch to a command-line interface which aligns with modern development workflows and automation practices.
