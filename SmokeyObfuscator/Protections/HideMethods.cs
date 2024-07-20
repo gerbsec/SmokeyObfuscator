@@ -11,12 +11,12 @@ namespace SmokeyObfuscator.Protections
 {
     internal class HideMethods
     {
+        private static Random random = new Random();
         public static void Execute(ModuleDef module)
         {
 
-            private static Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string customMethod = new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+            string customMethod = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
             TypeRef attrRef = module.CorLibTypes.GetTypeRef("System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
             var ctorRef = new MemberRefUser(module, ".ctor", MethodSig.CreateInstance(module.CorLibTypes.Void), attrRef);
             var attr = new CustomAttribute(ctorRef);
