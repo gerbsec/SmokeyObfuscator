@@ -6,12 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace SmokeyObfuscator.Protections
 {
     internal class HideMethods
     {
         public static void Execute(ModuleDef module)
         {
+
+            private static Random random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            string customMethod = new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
             TypeRef attrRef = module.CorLibTypes.GetTypeRef("System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
             var ctorRef = new MemberRefUser(module, ".ctor", MethodSig.CreateInstance(module.CorLibTypes.Void), attrRef);
             var attr = new CustomAttribute(ctorRef);
@@ -25,7 +30,7 @@ namespace SmokeyObfuscator.Protections
                 {
                     if (method.IsRuntimeSpecialName || method.IsSpecialName || method.Name == "Invoke") continue;
                     method.CustomAttributes.Add(attr);
-                    method.Name = "<gerbsec>" + method.Name;
+                    method.Name = "<" + customMethod + ">" + method.Name;
                 }
             }
 
@@ -35,7 +40,7 @@ namespace SmokeyObfuscator.Protections
             module.EntryPoint.DeclaringType.Methods.Add(meth1);
             var body = new CilBody();
             meth1.Body = body;
-            meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, "gerbsec"));
+            meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, customMethod));
             meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj, ctorRef2));
             meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Throw));
         }
