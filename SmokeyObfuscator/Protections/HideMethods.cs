@@ -1,48 +1,50 @@
-﻿using dnlib.DotNet.Emit;
-using dnlib.DotNet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Text;
-using System.Threading.Tasks;
-
+using dnlib.DotNet;
 
 namespace SmokeyObfuscator.Protections
 {
-    internal class HideMethods
+    internal static class HideMethods
     {
-        private static Random random = new Random();
         public static void Execute(ModuleDef module)
         {
+            if (module == null)
+                throw new ArgumentNullException(nameof(module));
 
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string customMethod = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-            TypeRef attrRef = module.CorLibTypes.GetTypeRef("System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
-            var ctorRef = new MemberRefUser(module, ".ctor", MethodSig.CreateInstance(module.CorLibTypes.Void), attrRef);
-            var attr = new CustomAttribute(ctorRef);
-
-            TypeRef attrRef2 = module.CorLibTypes.GetTypeRef("System", "EntryPointNotFoundException");
-            var ctorRef2 = new MemberRefUser(module, ".ctor", MethodSig.CreateInstance(module.CorLibTypes.Void, module.CorLibTypes.String), attrRef2);
-
-            foreach (var type in module.GetTypes())
+            foreach (TypeDef type in module.GetTypes())
             {
-                foreach (var method in type.Methods)
+                foreach (MethodDef method in type.Methods)
                 {
-                    if (method.IsRuntimeSpecialName || method.IsSpecialName || method.Name == "Invoke") continue;
-                    method.CustomAttributes.Add(attr);
-                    method.Name = "<" + customMethod + ">" + method.Name;
+                    if (!method.HasBody)
+                        continue;
+
+                    if (method == module.EntryPoint)
+                        continue;
+
+                    if (method.IsConstructor)
+                        continue;
+
+                    if (method.IsRuntimeSpecialName || method.IsSpecialName)
+                        continue;
+
+                    method.Name = GenerateObfuscatedName();
                 }
             }
+        }
 
-            var methImplFlags = MethodImplAttributes.IL | MethodImplAttributes.Managed;
-            var methFlags = MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.ReuseSlot;
-            var meth1 = new MethodDefUser("Main", MethodSig.CreateStatic(module.CorLibTypes.Void, module.CorLibTypes.String), methImplFlags, methFlags);
-            module.EntryPoint.DeclaringType.Methods.Add(meth1);
-            var body = new CilBody();
-            meth1.Body = body;
-            meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, customMethod));
-            meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj, ctorRef2));
-            meth1.Body.Instructions.Add(Instruction.Create(OpCodes.Throw));
+        private static string GenerateObfuscatedName()
+        {
+            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+
+            builder.Append("_m");
+            for (int i = 0; i < 12; i++)
+            {
+                builder.Append(chars[random.Next(chars.Length)]);
+            }
+
+            return builder.ToString();
         }
     }
 }

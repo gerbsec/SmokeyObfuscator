@@ -1,56 +1,51 @@
-# SmokeyObfuscator - Universal .NET C# Obfuscator for Windows
+# SmokeyObfuscator
 
-SmokeyObfuscator is a powerful tool designed to obfuscate .NET C# assemblies, enhancing security for your applications by making it difficult for reverse engineers to understand and tamper with your code.
+SmokeyObfuscator is a lightweight .NET assembly obfuscation utility built around dnlib. It is designed to help protect .NET applications by applying a small set of transformation passes to method names, string payloads, and numeric constants.
 
-## Features
+## What it does
 
-- **Universal Compatibility**: Works seamlessly with .NET C# assemblies targeting various versions of the .NET Framework.
-- **Advanced Obfuscation Techniques**: Employs sophisticated obfuscation techniques to scramble your code, making it extremely challenging to reverse engineer.
-- **Enhanced Security**: Protects your intellectual property and sensitive algorithms from being easily understood or stolen.
-- **Command-Line Interface**: Provides a command-line interface for easy integration into build processes and automation scripts.
-- **Customization Options**: Offers a range of customization options to tailor the obfuscation process to your specific needs.
+- Obfuscates .NET assemblies from a file or directory input
+- Handles `.exe` and `.dll` files
+- Applies multiple protections in a single pipeline
+- Supports writing transformed output to a separate output directory
 
-## Installation
+## Current protections
 
-1. Download the latest release of SmokeyObfuscator from the [Releases](https://github.com/gerbsec/SmokeyObfuscator/releases) page.
-2. Extract the downloaded ZIP file to a directory on your Windows machine.
+- `NumberChanger`: rewrites literal integer values using arithmetic-based obfuscation
+- `Strings`: base64-encodes string literals and injects a decoder path
+- `ProxyInts`: redirects literal values through generated helper methods
+- `HideMethods`: renames methods and reduces obvious signatures in the output assembly
 
 ## Usage
 
-SmokeyObfuscator is operated entirely from the command line, providing a straightforward way to obfuscate assemblies as part of automated scripts or manual operations.
+### Obfuscate a single file
 
-### Basic Commands
-
-- **Obfuscate a Directory**:
-  ```
-  SmokeyObfuscator.exe -d <path-to-directory>
-  ```
-  This command will obfuscate all compatible files within the specified directory.
-
-- **Obfuscate a Single File**:
-  ```
-  SmokeyObfuscator.exe -f <path-to-file>
-  ```
-  Use this command to obfuscate a specific file.
-
-- **Help**:
-  ```
-  SmokeyObfuscator.exe -h
-  ```
-  Displays usage information and help about the command-line arguments.
-
-### Example
-
-To obfuscate all files in a directory called `bin/Release`, navigate to the directory where `SmokeyObfuscator.exe` is located and run:
-```
-SmokeyObfuscator.exe -d "C:\Path\To\Your\Project\bin\Release"
+```bat
+SmokeyObfuscator.exe -f "C:\Path\To\YourApp.exe"
 ```
 
-To obfuscate a single assembly named `MyApp.exe` in the directory `bin/Release`, run:
-```
-SmokeyObfuscator.exe -f "C:\Path\To\Your\Project\bin\Release\MyApp.exe"
+### Obfuscate a directory
+
+```bat
+SmokeyObfuscator.exe -d "C:\Path\To\bin\Release" 
 ```
 
-## Support
+### Write to a separate output directory
 
-For any issues, bugs, or feature requests, please [open an issue](https://github.com/gerbsec/SmokeyObfuscator/issues) on GitHub. Your feedback helps make SmokeyObfuscator better for everyone.
+```bat
+SmokeyObfuscator.exe -f "C:\Path\To\YourApp.exe" -o "C:\Path\To\Output"
+```
+
+### Show help
+
+```bat
+SmokeyObfuscator.exe -h
+```
+
+## Notes
+
+This project is intentionally lightweight and focused on pipeline simplicity. It is best suited for experimentation, training, or pre-release hardening rather than production-grade commercial obfuscation.
+
+## Building
+
+The project targets .NET Framework 4.8, so it requires the .NET Framework 4.8 Developer Pack to build on Windows. The code is intended to run on Windows-based .NET tooling environments.

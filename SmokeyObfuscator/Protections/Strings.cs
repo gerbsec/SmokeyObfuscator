@@ -1,53 +1,67 @@
-﻿using dnlib.DotNet.Emit;
-using dnlib.DotNet;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using dnlib.DotNet;
+using dnlib.DotNet.Emit;
 
 namespace SmokeyObfuscator.Protections
 {
-    internal class Strings
+    internal static class Strings
     {
-        private static Random random = new Random();
         public static void Execute(ModuleDefMD module)
         {
-            
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            string randName = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-            MethodDefUser TTH = new MethodDefUser(randName, MethodSig.CreateStatic(module.CorLibTypes.String, module.CorLibTypes.String), MethodImplAttributes.IL | MethodImplAttributes.Managed, MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig | MethodAttributes.ReuseSlot); ;
-            module.GlobalType.Methods.Add(TTH);
-            CilBody body = new CilBody();
-            TTH.Body = body;
-            body.Instructions.Add(OpCodes.Nop.ToInstruction());
-            body.Instructions.Add(OpCodes.Call.ToInstruction(module.Import(typeof(Encoding).GetMethod("get_UTF8", new Type[] { }))));
-            body.Instructions.Add(OpCodes.Ldarg_0.ToInstruction());
-            body.Instructions.Add(OpCodes.Call.ToInstruction(module.Import(typeof(System.Convert).GetMethod("FromBase64String", new Type[] { typeof(string) }))));
-            body.Instructions.Add(OpCodes.Callvirt.ToInstruction(module.Import(typeof(System.Text.Encoding).GetMethod("GetString", new Type[] { typeof(byte[]) }))));
-            body.Instructions.Add(OpCodes.Ret.ToInstruction());
+            if (module == null)
+                throw new ArgumentNullException(nameof(module));
+
+            MethodDefUser decoder = CreateStringDecoder(module);
+
             foreach (TypeDef type in module.Types)
             {
-                if (type.Name != "Resources" || type.Name != "Settings")
+                foreach (MethodDef method in type.Methods)
                 {
-                    foreach (MethodDef method in type.Methods)
+                    if (!method.HasBody)
+                        continue;
+
+                    for (int i = 0; i < method.Body.Instructions.Count; i++)
                     {
-                        if (!method.HasBody)
+                        Instruction instruction = method.Body.Instructions[i];
+                        if (instruction.OpCode != OpCodes.Ldstr)
                             continue;
-                        for (int i = 0; i < method.Body.Instructions.Count(); i++)
-                        {
-                            if (method.Body.Instructions[i].OpCode == OpCodes.Ldstr)
-                            {
-                                method.Body.Instructions[i].Operand = Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(method.Body.Instructions[i].Operand.ToString()));
-                                method.Body.Instructions.Insert(i + 1, new Instruction(OpCodes.Call, TTH));
-                                i += 1;
-                            }
-                        }
-                        method.Body.SimplifyBranches();
-                        method.Body.OptimizeBranches();
+
+                        string originalValue = instruction.Operand as string;
+                        if (originalValue == null)
+                            continue;
+
+                        instruction.Operand = Convert.ToBase64String(Encoding.UTF8.GetBytes(originalValue));
+                        method.Body.Instructions.Insert(i + 1, new Instruction(OpCodes.Call, decoder));
+                        i++;
                     }
+
+                    method.Body.SimplifyBranches();
+                    method.Body.OptimizeBranches();
                 }
             }
+        }
+
+        private static MethodDefUser CreateStringDecoder(ModuleDefMD module)
+        {
+            string methodName = "_decodeString" + Guid.NewGuid().ToString("N").Substring(0, 8);
+            MethodDefUser decoder = new MethodDefUser(
+                methodName,
+                MethodSig.CreateStatic(module.CorLibTypes.String, module.CorLibTypes.String),
+                MethodImplAttributes.IL | MethodImplAttributes.Managed,
+                MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig);
+
+            CilBody body = new CilBody();
+            body.Instructions.Add(Instruction.Create(OpCodes.Call, module.Import(typeof(Encoding).GetProperty("UTF8").GetGetMethod())));
+            body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
+            body.Instructions.Add(Instruction.Create(OpCodes.Call, module.Import(typeof(Convert).GetMethod("FromBase64String", new[] { typeof(string) }))));
+            body.Instructions.Add(Instruction.Create(OpCodes.Callvirt, module.Import(typeof(Encoding).GetMethod("GetString", new[] { typeof(byte[]) })))) ;
+            body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+            decoder.Body = body;
+
+            module.GlobalType.Methods.Add(decoder);
+            return decoder;
         }
     }
 }
