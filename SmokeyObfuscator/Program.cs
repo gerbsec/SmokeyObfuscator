@@ -1,103 +1,190 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using dnlib.DotNet;
 using dnlib.DotNet.Writer;
 using SmokeyObfuscator.Protections;
 
 namespace SmokeyObfuscator
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Application started.");
+        private static readonly string[] SupportedExtensions = new[] { ".exe", ".dll" };
 
-            if (args.Length == 0 || args[0] == "-h")
-            {
-                Console.WriteLine("No arguments provided or help requested.");
-                ShowHelp();
-                return;
-            }
-                
-            switch (args[0])
-            {
-                case "-d":
-                    if (args.Length < 2)
-                    {
-                        Console.WriteLine("Directory path required.");
-                        return;
-                    }
-                    Console.WriteLine($"Obfuscating directory: {args[1]}");
-                    ObfuscateDirectory(args[1]);
-                    break;
-                case "-f":
-                    if (args.Length < 2)
-                    {
-                        Console.WriteLine("File path required.");
-                        return;
-                    }
-                    Console.WriteLine($"Obfuscating file: {args[1]}");
-                    ObfuscateFile(args[1]);
-                    break;
-                default:
-                    Console.WriteLine("Invalid argument. Use -h for help.");
-                    break;
-            }
-        }
-
-
-        static void ShowHelp()
-        {
-            Console.WriteLine("Usage:");
-            Console.WriteLine("  -d <directory>  Obfuscate all executables in the specified directory.");
-            Console.WriteLine("  -f <file>       Obfuscate a single executable.");
-            Console.WriteLine("  -h              Show this help message.");
-        }
-
-        static void ObfuscateDirectory(string directory)
-        {
-            string[] files = Directory.GetFiles(directory, "*.exe");
-            foreach (string file in files)
-            {
-                ObfuscateFile(file);
-            }
-        }
-
-        static void ObfuscateFile(string filePath)
+        private static int Main(string[] args)
         {
             try
             {
-                byte[] fileBytes = File.ReadAllBytes(filePath);
-                ModuleDefMD module;
-                using (var ms = new MemoryStream(fileBytes))
+                var options = ParseArguments(args);
+                if (options.ShowHelp)
                 {
-                    module = ModuleDefMD.Load(ms);
+                    ShowHelp();
+                    return 0;
                 }
 
-                NumberChanger.Process(module);
-                Strings.Execute(module);
-                ProxyInts.Execute(module);
-                HideMethods.Execute(module);
+                if (string.IsNullOrWhiteSpace(options.TargetPath))
+                {
+                    Console.Error.WriteLine("A target file or directory is required. Use -h for help.");
+                    return 1;
+                }
 
-                SaveFile(module, filePath);
-                Console.WriteLine($"Obfuscated: {filePath}");
+                if (options.IsDirectory)
+                {
+                    ObfuscateDirectory(options.TargetPath, options.OutputDirectory);
+                }
+                else
+                {
+                    ObfuscateFile(options.TargetPath, options.OutputDirectory);
+                }
+
+                return 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing {filePath}: {ex.Message}");
+                Console.Error.WriteLine("SmokeyObfuscator failed: " + ex.Message);
+                return 1;
             }
         }
 
-        static void SaveFile(ModuleDefMD module, string path)
+        private static CommandOptions ParseArguments(string[] args)
         {
-            var opts = new ModuleWriterOptions(module)
+            var options = new CommandOptions();
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                string current = args[i];
+
+                switch (current)
+                {
+                    case "-h":
+                    case "--help":
+                        options.ShowHelp = true;
+                        break;
+                    case "-d":
+                        options.IsDirectory = true;
+                        if (i + 1 >= args.Length)
+                            throw new ArgumentException("Directory path required after -d.");
+                        options.TargetPath = args[++i];
+                        break;
+                    case "-f":
+                        options.IsDirectory = false;
+                        if (i + 1 >= args.Length)
+                            throw new ArgumentException("File path required after -f.");
+                        options.TargetPath = args[++i];
+                        break;
+                    case "-o":
+                        if (i + 1 >= args.Length)
+                            throw new ArgumentException("Output path required after -o.");
+                        options.OutputDirectory = args[++i];
+                        break;
+                    default:
+                        if (string.IsNullOrWhiteSpace(options.TargetPath))
+                        {
+                            options.TargetPath = current;
+                            options.IsDirectory = Directory.Exists(current);
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Unexpected argument: " + current);
+                        }
+                        break;
+                }
+            }
+
+            return options;
+        }
+
+        private static void ShowHelp()
+        {
+            Console.WriteLine("SmokeyObfuscator");
+            Console.WriteLine();
+            Console.WriteLine("Usage:");
+            Console.WriteLine("  SmokeyObfuscator.exe -d <directory> [-o <output-directory>] ");
+            Console.WriteLine("  SmokeyObfuscator.exe -f <file> [-o <output-directory>] ");
+            Console.WriteLine("  SmokeyObfuscator.exe -h");
+            Console.WriteLine();
+            Console.WriteLine("Notes:");
+            Console.WriteLine("  -d obfuscates every supported executable in a directory.");
+            Console.WriteLine("  -f obfuscates a single .exe or .dll file.");
+            Console.WriteLine("  -o writes the transformed files into a separate output directory.");
+        }
+
+        private static void ObfuscateDirectory(string directory, string outputDirectory = null)
+        {
+            if (!Directory.Exists(directory))
+                throw new DirectoryNotFoundException("Directory not found: " + directory);
+
+            var files = Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories)
+                .Where(path => SupportedExtensions.Contains(Path.GetExtension(path).ToLowerInvariant()))
+                .ToList();
+
+            if (files.Count == 0)
+            {
+                Console.WriteLine("No supported .exe/.dll files were found in: " + directory);
+                return;
+            }
+
+            foreach (string file in files)
+            {
+                ObfuscateFile(file, outputDirectory);
+            }
+        }
+
+        private static void ObfuscateFile(string filePath, string outputDirectory = null)
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("File not found: " + filePath);
+
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+            if (!SupportedExtensions.Contains(extension))
+                throw new InvalidOperationException("Unsupported file type: " + filePath);
+
+            string destinationPath = ResolveOutputPath(filePath, outputDirectory);
+            string directory = Path.GetDirectoryName(destinationPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+            ModuleDefMD module;
+            using (var stream = new MemoryStream(fileBytes))
+            {
+                module = ModuleDefMD.Load(stream);
+            }
+
+            ObfuscationPipeline.Execute(module);
+            SaveFile(module, destinationPath);
+            Console.WriteLine("Obfuscated: " + destinationPath);
+        }
+
+        private static string ResolveOutputPath(string sourcePath, string outputDirectory)
+        {
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+                return sourcePath;
+
+            string fileName = Path.GetFileName(sourcePath);
+            return Path.Combine(outputDirectory, fileName);
+        }
+
+        private static void SaveFile(ModuleDefMD module, string path)
+        {
+            var options = new ModuleWriterOptions(module)
             {
                 Logger = DummyLogger.NoThrowInstance
             };
+
             string tempPath = path + ".tmp";
-            module.Write(tempPath, opts);
+            module.Write(tempPath, options);
             File.Copy(tempPath, path, true);
             File.Delete(tempPath);
+        }
+
+        private class CommandOptions
+        {
+            public bool ShowHelp { get; set; }
+            public bool IsDirectory { get; set; }
+            public string TargetPath { get; set; }
+            public string OutputDirectory { get; set; }
         }
     }
 }
